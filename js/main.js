@@ -140,10 +140,12 @@
 
 
     function initPiChart(samples) {
+        var eleNo = 0,
+        	gWrap;
 
-        var eleNo = 0;
         rotation = 0;
-        var gWrap = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gWrap = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
         for (var key in data) {
             drawPiChart(data[key], rotation, gWrap);
             rotation += data[key].per * 360;
@@ -166,15 +168,15 @@
 
         for (; i <= noOfShelf; i++) {
             x = Math.sqrt(shelfRadius * shelfRadius - y * y);
-            coList[c] = [];
-            coList[c]['shelfX'] = centerX + x;
-            coList[c]['shelfY'] = centerY - y;
-            coList[c]['isTaken'] = false;
+            coList[c] = {};
+            coList[c].shelfX = centerX + x;
+            coList[c].shelfY = centerY - y;
+            coList[c].isTaken = false;
             c++;
             coList[c] = [];
-            coList[c]['shelfX'] = centerX - x;
-            coList[c]['shelfY'] = centerY - y;
-            coList[c]['isTaken'] = false;
+            coList[c].shelfX = centerX - x;
+            coList[c].shelfY = centerY - y;
+            coList[c].isTaken = false;
             c++;
             y -= shelfGap;
         }
@@ -213,7 +215,6 @@
     }
 
     function drawText(X, Y, content, radians, eleNo) {
-
         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
@@ -238,7 +239,6 @@
     }
 
     function drawTestDots(X, Y, color) {
-
         var dot = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         dot.setAttribute('x', X);
@@ -267,12 +267,12 @@
 
 
     function drawLine(X, Y, x, y, color) {
-        var path_line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        var R = radius + shelfGapFromPie;
-        var QX = R / radius * X;
-        var QY = R / radius * Y;
-        var offset = 40;
+        var path_line = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+        	g = document.createElementNS('http://www.w3.org/2000/svg', 'g'),
+        	R = radius + shelfGapFromPie,
+        	QX = R / radius * X,
+        	QY = R / radius * Y,
+        	offset = 40;
 
         path_line.setAttribute('d', 'M ' + X + ' ' + Y + 'Q' + (x + 10) + ',' + (y) + ' ' + x + ',' + y + '');
         path_line.setAttribute('stroke', color);
@@ -289,19 +289,16 @@
     }
 
     function calculatePercentage(data) {
-        var total = 0,
-            key;
-        for (key in data) {
-            total += data[key].val;
-        }
-        for (key in data) {
-            data[key].per = data[key].val / total;
-        }
+        var total = 0,key;
+
+        for (key in data) { total += data[key].val; }
+        for (key in data) { data[key].per = data[key].val / total; }
         return data;
     }
 
     function calculateRadians(data) {
         var key, rotation = 0;
+
         for (key in data) {
             samples[key].radians = degToRadians(rotation);
             rotation += samples[key].per * 360;
@@ -326,11 +323,9 @@
 
 
         var d = 'M' + startX + ',' + startY + ' A' + radius + ',' + radius + ' 0 0,1 ' + piToX + ',' + piToY + ' L' + centerX + ',' + centerY + ' L' + startX + ',' + startY + ' z ';
-
         var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         var set_1 = document.createElementNS('http://www.w3.org/2000/svg', 'set');
         var set_2 = document.createElementNS('http://www.w3.org/2000/svg', 'set');
-
         var anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateTransform');
         var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
@@ -406,20 +401,16 @@
         });
 
     function animateTotalVal(currentVal, currentPos, limit) {
-        var cv = currentVal;
-        var cp = currentPos;
-        var d = data;
+        var cv = currentVal,
+        	cp = currentPos,
+        	d = data;
+
         cv += d[cp].val;
-
         $('.total-val').html('&#8364; ' + cv.toFixed(2));
-        if (cp == limit - 1) {
-            return true;
-        } else {
-            cp++;
-            setTimeout(function() {
-                animateTotalVal(cv, cp, limit);
-            }, (animateDuration / limit * 1000));
-        }
-
+        if (cp == limit - 1) { return true; }
+        cp++;
+        setTimeout(function() {
+            animateTotalVal(cv, cp, limit);
+        }, (animateDuration / limit * 1000));
     }
 }(jQuery));
