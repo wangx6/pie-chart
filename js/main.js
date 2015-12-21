@@ -1,6 +1,8 @@
 (function($) {
-    var
-        data = getData(),
+	'use strict';
+
+	var samples,
+    	data = getData(),
         sh = $('#chart-svg').height(),
         sw = $('#chart-svg').width(),
         radius = 100,
@@ -18,7 +20,7 @@
     initPiChart(data);
     createTextShelf(data);
     setTimeout(function() {
-        animateTotalVal(0, 0, Object.keys(data).length)
+        animateTotalVal(0, 0, Object.keys(data).length);
     }, 500);
     getCenterPoint(data);
 
@@ -148,16 +150,13 @@
             eleNo++;
         }
         gWrap.setAttribute('id', 'g-wrap');
-        CHART_SVG.append(gWrap)
-        $('#g-wrap').hide(function() {
-            $(this).delay(500).fadeIn(1000);
-        });
+        CHART_SVG.append(gWrap);
     }
 
     function createTextShelf(data) {
         var shelfH = (radius + shelfGapFromPie) * 2 - 2,
-            shelfRadius = radius + shelfGapFromPie;
-        shelfGap = 20,
+            shelfRadius = radius + shelfGapFromPie,
+        	shelfGap = 20,
             noOfShelf = shelfH / shelfGap,
             i = 0,
             x = 0,
